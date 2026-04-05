@@ -1,67 +1,128 @@
 # Woki Tokie
 
-Voice-to-voice system for Claude Code. Hold Space to dictate, release to auto-submit, hear Claude's response spoken back.
+Voice-to-voice mode for Claude Code. Speak to Claude, hear it think, get spoken responses.
 
-## Architecture
-
-Three systems work together, all gated by `/tmp/claude-voice-active`:
-
-1. **ElevenLabs TTS** (`hooks/speak-response.py`) — Stop hook speaks Claude's response
-2. **Hammerspoon auto-submit** (`hammerspoon/init.lua`) — Space held >1s in terminal auto-presses Enter
-3. **Thinking sounds** (`hooks/start-thinking.sh`) — loops audio while Claude processes
-
-## Activation
-
-- **OFF by default** — every session starts silent via `hooks/kill-voice.sh` (SessionStart hook)
-- Enable: `touch /tmp/claude-voice-active`
-- Disable: `rm /tmp/claude-voice-active`
-
-## Installation
-
-### 1. Copy hooks to `~/.claude/hooks/`
+## Install
 
 ```bash
-cp hooks/speak-response.py ~/.claude/hooks/
-cp hooks/start-thinking.sh ~/.claude/hooks/
-cp hooks/kill-voice.sh ~/.claude/hooks/
-chmod +x ~/.claude/hooks/start-thinking.sh ~/.claude/hooks/kill-voice.sh
+claude plugin add github:felipesalinasr/wokitokie
 ```
 
-### 2. Add hooks to `~/.claude/settings.json`
-
-Merge the contents of `settings-hooks.example.json` into your settings.
-
-### 3. Install Hammerspoon config
+Or from npm:
 
 ```bash
-cp hammerspoon/init.lua ~/.hammerspoon/init.lua
+claude plugin add wokitokie
 ```
 
-Reload Hammerspoon.
+## Setup
 
-### 4. Set your ElevenLabs API key
+1. Set your ElevenLabs API key:
 
 ```bash
-export ELEVENLABS_API_KEY="your-key-here"
+echo 'export ELEVENLABS_API_KEY="your-key"' >> ~/.zshrc
+source ~/.zshrc
 ```
 
-Or set it in `~/.zshrc`.
+2. Generate thinking sound clips:
 
-### 5. Add a thinking sound
+```
+/voice-generate
+```
 
-Place a `thinking.mp3` file at `~/.claude/hooks/thinking.mp3`.
+## Usage
+
+```
+/voice-on     # start voice mode
+/voice-off    # stop voice mode
+```
+
+When voice mode is on:
+- Claude speaks responses aloud via ElevenLabs TTS
+- You hear vocal thinking clips while Claude processes ("Hmm, let me think about that...")
+- Every session starts with voice OFF — enable it when you want it
+
+## Optional: Hammerspoon Auto-Submit (macOS)
+
+For full hands-free mode, install [Hammerspoon](https://www.hammerspoon.org) and add this to `~/.hammerspoon/init.lua`:
+
+```lua
+require("hs.ipc")
+
+SpaceDownTime = 0
+HOLD_THRESHOLD = 1.0
+FLAG_FILE = "/tmp/claude-voice-active"
+
+SpaceTap = hs.eventtap.new({hs.eventtap.event.types.keyDown, hs.eventtap.event.types.keyUp}, function(event)
+    local keyCode = event:getKeyCode()
+    local eventType = event:getType()
+    if keyCode ~= 49 then return false end
+    local f = io.open(FLAG_FILE, "r")
+    if not f then return false end
+    f:close()
+    local app = hs.application.frontmostApplication()
+    if not app then return false end
+    local bundleID = app:bundleID()
+    if bundleID ~= "com.apple.Terminal" and bundleID ~= "com.googlecode.iterm2" and bundleID ~= "dev.warp.Warp-Stable" then return false end
+    if eventType == hs.eventtap.event.types.keyDown then
+        if SpaceDownTime == 0 then SpaceDownTime = hs.timer.secondsSinceEpoch() end
+        return false
+    end
+    if eventType == hs.eventtap.event.types.keyUp then
+        if SpaceDownTime > 0 then
+            local held = hs.timer.secondsSinceEpoch() - SpaceDownTime
+            SpaceDownTime = 0
+            if held >= HOLD_THRESHOLD then
+                hs.timer.doAfter(0.5, function() hs.eventtap.keyStroke({}, "return") end)
+            end
+        end
+        return false
+    end
+    return false
+end)
+SpaceTap:start()
+
+-- Escape to cut audio
+EscTap = hs.eventtap.new({hs.eventtap.event.types.keyDown}, function(event)
+    if event:getKeyCode() ~= 53 then return false end
+    local f = io.open(FLAG_FILE, "r")
+    if not f then return false end
+    f:close()
+    local app = hs.application.frontmostApplication()
+    if not app then return false end
+    local bundleID = app:bundleID()
+    if bundleID ~= "com.apple.Terminal" and bundleID ~= "com.googlecode.iterm2" and bundleID ~= "dev.warp.Warp-Stable" then return false end
+    os.execute("pkill -9 -x afplay 2>/dev/null")
+    local pf = io.open("/tmp/claude-thinking.pid", "r")
+    if pf then
+        local pid = pf:read("*l")
+        pf:close()
+        if pid and pid:match("^%d+$") then
+            hs.task.new("/bin/kill", nil, {"-9", pid}):start()
+        end
+        os.remove("/tmp/claude-thinking.pid")
+    end
+    return false
+end)
+EscTap:start()
+```
+
+This lets you hold Space to dictate and press Escape to cut audio mid-sentence.
 
 ## Configuration
 
-- **Voice ID**: Change `VOICE_ID` in `speak-response.py` (default: Rachel)
-- **Model**: Change `MODEL_ID` (default: `eleven_turbo_v2_5`)
-- **Hold threshold**: Change `HOLD_THRESHOLD` in `init.lua` (default: 1.0s)
-- **Auto-submit delay**: Change the `doAfter` timer in `init.lua` (default: 0.5s)
+| Env Variable | Default | Description |
+|---|---|---|
+| `ELEVENLABS_API_KEY` | (required) | Your ElevenLabs API key |
+| `WOKITOKIE_VOICE_ID` | `g2W4HAjKvdW93AmsjsOx` | ElevenLabs voice ID |
+| `WOKITOKIE_MODEL_ID` | `eleven_turbo_v2_5` | ElevenLabs model |
 
 ## Requirements
 
-- macOS
-- Claude Code CLI with voice mode (`voiceEnabled: true`)
-- [ElevenLabs](https://elevenlabs.io) API key
-- [Hammerspoon](https://www.hammerspoon.org)
+- macOS (uses `afplay` for audio playback)
 - Python 3
+- [ElevenLabs](https://elevenlabs.io) API key
+- Claude Code with voice mode enabled (`voiceEnabled: true` in settings)
+
+## License
+
+MIT

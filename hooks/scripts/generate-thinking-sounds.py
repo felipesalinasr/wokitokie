@@ -3,9 +3,11 @@
 import json, os, urllib.request, time
 
 API_KEY = os.environ.get("ELEVENLABS_API_KEY", "")
-VOICE_ID = "g2W4HAjKvdW93AmsjsOx"
-MODEL_ID = "eleven_turbo_v2_5"
-OUTPUT_DIR = os.path.expanduser("~/.claude/hooks/thinking-sounds")
+VOICE_ID = os.environ.get("WOKITOKIE_VOICE_ID", "g2W4HAjKvdW93AmsjsOx")
+MODEL_ID = os.environ.get("WOKITOKIE_MODEL_ID", "eleven_turbo_v2_5")
+
+PLUGIN_ROOT = os.environ.get("CLAUDE_PLUGIN_ROOT", os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+OUTPUT_DIR = os.path.join(PLUGIN_ROOT, "hooks", "scripts", "thinking-sounds")
 
 PHRASES = [
     {"name": "think-01", "text": "Hmm... let me think about that for a moment."},
@@ -26,7 +28,8 @@ PHRASES = [
 ]
 
 if not API_KEY:
-    print("Error: ELEVENLABS_API_KEY env var not set")
+    print("Error: ELEVENLABS_API_KEY environment variable not set")
+    print("Set it with: export ELEVENLABS_API_KEY=your-key")
     exit(1)
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -67,4 +70,4 @@ for phrase in PHRASES:
 
     time.sleep(0.5)
 
-print("done")
+print("Done! Thinking sounds are ready.")

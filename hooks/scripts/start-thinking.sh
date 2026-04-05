@@ -1,9 +1,9 @@
 #!/bin/bash
 # Play a random vocal thinking clip while Claude processes
-# Only runs if voice mode is active
 [ ! -f /tmp/claude-voice-active ] && exit 0
 
-SOUNDS_DIR="$HOME/.claude/hooks/thinking-sounds"
+PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(dirname "$(dirname "$(dirname "$0")")")}"
+SOUNDS_DIR="$PLUGIN_ROOT/hooks/scripts/thinking-sounds"
 PIDFILE="/tmp/claude-thinking.pid"
 
 # Kill any existing thinking sound
@@ -22,9 +22,7 @@ if [ ${#SOUNDS[@]} -eq 0 ]; then
 fi
 SOUND="${SOUNDS[$((RANDOM % ${#SOUNDS[@]}))]}"
 
-# Verify it's a real file
 [ ! -f "$SOUND" ] && exit 0
 
-# Play once (not looped — these are short spoken phrases)
 afplay "$SOUND" 2>/dev/null &
 echo $! > "$PIDFILE"

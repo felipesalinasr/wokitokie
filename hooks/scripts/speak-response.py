@@ -3,9 +3,8 @@
 import json, sys, re, subprocess, tempfile, os, shlex, urllib.request
 
 ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY", "")
-# Default voice: Rachel (clear, natural female). Change to any ElevenLabs voice ID.
-VOICE_ID = "g2W4HAjKvdW93AmsjsOx"
-MODEL_ID = "eleven_turbo_v2_5"
+VOICE_ID = os.environ.get("WOKITOKIE_VOICE_ID", "g2W4HAjKvdW93AmsjsOx")
+MODEL_ID = os.environ.get("WOKITOKIE_MODEL_ID", "eleven_turbo_v2_5")
 
 
 def clean_for_speech(text):
@@ -102,7 +101,6 @@ def main():
     except Exception:
         sys.exit(0)
 
-    # Play in a detached process so the hook exits fast
     subprocess.Popen(
         ['bash', '-c', f'afplay {shlex.quote(audio_file)}; rm -f {shlex.quote(audio_file)}'],
         stdout=subprocess.DEVNULL,

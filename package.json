@@ -1,0 +1,12 @@
+{
+  "name": "wokitokie",
+  "version": "1.0.0",
+  "description": "Voice-to-voice mode for Claude Code — speak to Claude, hear it think, get spoken responses via ElevenLabs TTS",
+  "author": "Felipe Salinas",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/felipesalinasr/wokitokie"
+  },
+  "keywords": ["claude-code", "voice", "tts", "elevenlabs", "voice-to-voice"]
+}
