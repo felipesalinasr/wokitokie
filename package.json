@@ -1,15 +1,14 @@
 {
   "name": "wokitokie",
-  "version": "1.1.0",
-  "description": "Voice-to-voice mode for Claude Code — speak to Claude, hear it think, get spoken responses via ElevenLabs TTS",
-  "author": "Felipe Salinas",
-  "license": "MIT",
-  "bin": {
-    "wokitokie": "./bin/wokitokie.js"
+  "private": true,
+  "workspaces": ["packages/shared", "packages/server", "packages/phone", "packages/dock"],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/felipesalinasr/wokitokie"
-  },
-  "keywords": ["claude-code", "voice", "tts", "elevenlabs", "voice-to-voice"]
+  "packageManager": "npm@10.9.2",
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "typescript": "^5.4.0"
+  }
 }
