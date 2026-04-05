@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent 2 - Pizza Face</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #3B7DB5;
+    overflow: hidden;
+  }
+  .scene {
+    width: 500px;
+    height: 700px;
+    position: relative;
+  }
+  svg { width: 100%; height: 100%; }
+
+  /* Idle sway - cool lean */
+  .character-group {
+    animation: coolSway 4s ease-in-out infinite;
+    transform-origin: 250px 650px;
+  }
+  @keyframes coolSway {
+    0%, 100% { transform: rotate(0deg) translateY(0); }
+    50% { transform: rotate(0.5deg) translateY(-4px); }
+  }
+
+  /* Sunglasses glint */
+  .glint {
+    animation: glint 5s ease-in-out infinite;
+  }
+  .glint-2 {
+    animation: glint 5s ease-in-out infinite;
+    animation-delay: 2.5s;
+  }
+  @keyframes glint {
+    0%, 80%, 100% { opacity: 0; }
+    85% { opacity: 0.8; }
+  }
+
+  /* Crust ring bounce */
+  .crust-ring {
+    animation: crustBounce 4s ease-in-out infinite;
+    transform-origin: 250px 280px;
+  }
+  @keyframes crustBounce {
+    0%, 100% { transform: scaleY(1) translateY(0); }
+    50% { transform: scaleY(1.02) translateY(1px); }
+  }
+
+  /* Waving hand */
+  .waving-hand {
+    animation: wave 2.5s ease-in-out infinite;
+    transform-origin: 330px 340px;
+  }
+  @keyframes wave {
+    0%, 100% { transform: rotate(0deg); }
+    15% { transform: rotate(12deg); }
+    30% { transform: rotate(-5deg); }
+    45% { transform: rotate(10deg); }
+    60% { transform: rotate(0deg); }
+  }
+
+  /* Left arm idle */
+  .left-arm {
+    animation: armIdle 4s ease-in-out infinite;
+    transform-origin: 210px 320px;
+  }
+  @keyframes armIdle {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(-1.5deg); }
+  }
+
+  /* Crown/crust top wiggle */
+  .crown {
+    animation: crownWiggle 3s ease-in-out infinite;
+    transform-origin: 250px 130px;
+  }
+  @keyframes crownWiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(2deg); }
+    75% { transform: rotate(-2deg); }
+  }
+
+  /* Shadow */
+  .shadow {
+    animation: shadowPulse 4s ease-in-out infinite;
+    transform-origin: 270px 660px;
+  }
+  @keyframes shadowPulse {
+    0%, 100% { transform: scaleX(1); opacity: 0.15; }
+    50% { transform: scaleX(1.06); opacity: 0.1; }
+  }
+
+  /* Walking legs subtle shift */
+  .legs {
+    animation: legShift 4s ease-in-out infinite;
+    transform-origin: 250px 500px;
+  }
+  @keyframes legShift {
+    0%, 100% { transform: skewX(0deg); }
+    50% { transform: skewX(0.3deg); }
+  }
+
+  /* Sunglasses reflection lines shimmer */
+  .reflection-line {
+    animation: shimmer 3s ease-in-out infinite;
+  }
+  .reflection-line-2 {
+    animation: shimmer 3s ease-in-out infinite;
+    animation-delay: 0.15s;
+  }
+  .reflection-line-3 {
+    animation: shimmer 3s ease-in-out infinite;
+    animation-delay: 0.3s;
+  }
+  @keyframes shimmer {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 0.4; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scene">
+<svg viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F0F0F0"/>
+    </linearGradient>
+    <linearGradient id="crustGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F0C949"/>
+      <stop offset="50%" stop-color="#E0B530"/>
+      <stop offset="100%" stop-color="#D4A520"/>
+    </linearGradient>
+    <linearGradient id="crownGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F5D060"/>
+      <stop offset="100%" stop-color="#E0B530"/>
+    </linearGradient>
+    <linearGradient id="lensGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2a2a2a"/>
+      <stop offset="100%" stop-color="#1a1a1a"/>
+    </linearGradient>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#1a1a1a" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <!-- Floor line -->
+  <line x1="140" y1="660" x2="420" y2="660" stroke="#1a1a1a" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Floor shadow -->
+  <ellipse class="shadow" cx="270" cy="658" rx="90" ry="6" fill="#0a2a4a" opacity="0.15"/>
+
+  <g class="character-group">
+
+    <!-- === LEGS (crossed/walking pose) === -->
+    <g class="legs">
+      <!-- Back leg (left, going backward) -->
+      <path d="M235 500 L200 600 L185 620 Q178 635 188 645 L210 660 Q220 665 225 655 L230 640 L260 520"
+            fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <!-- Front shoe/foot back -->
+      <path d="M188 645 L170 650 Q162 655 168 662 L210 660"
+            fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="3.5" stroke-linejoin="round"/>
+
+      <!-- Front leg (right, stepping forward) -->
+      <path d="M260 500 L290 580 L310 630 Q315 645 305 655 L280 660 Q268 662 265 652 L262 640 L245 520"
+            fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <!-- Front shoe/foot front -->
+      <path d="M305 655 L330 650 Q340 652 338 660 L320 665 L280 660"
+            fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="3.5" stroke-linejoin="round"/>
+    </g>
+
+    <!-- === BODY / TORSO === -->
+    <path d="M220 300 Q220 500 235 510 L265 510 Q280 500 280 300 Z"
+          fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="3.5" stroke-linejoin="round"/>
+
+    <!-- === LEFT ARM (tucked at side) === -->
+    <g class="left-arm">
+      <path d="M220 320 Q195 340 190 360 Q185 380 195 395 Q205 405 215 395 Q225 385 228 370 L230 340"
+            fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Left hand/fist -->
+      <path d="M195 388 Q188 395 192 402 Q198 408 205 400"
+            fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+
+    <!-- === RIGHT ARM (extended, waving/presenting) === -->
+    <g class="waving-hand">
+      <path d="M280 320 Q310 310 340 320 Q360 330 365 345"
+            fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Forearm -->
+      <path d="M340 320 Q355 325 362 340"
+            fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/>
+      <!-- Hand palm -->
+      <ellipse cx="365" cy="348" rx="12" ry="14" fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="3"/>
+      <!-- Fingers spread out -->
+      <!-- Index finger -->
+      <path d="M360 336 Q355 318 358 310"
+            fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="2.8" stroke-linecap="round"/>
+      <!-- Middle finger -->
+      <path d="M366 334 Q366 314 368 305"
+            fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="2.8" stroke-linecap="round"/>
+      <!-- Ring finger -->
+      <path d="M372 336 Q376 318 378 312"
+            fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="2.8" stroke-linecap="round"/>
+      <!-- Pinky -->
+      <path d="M376 342 Q384 330 386 324"
+            fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Thumb -->
+      <path d="M354 348 Q342 345 338 338"
+            fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="2.8" stroke-linecap="round"/>
+    </g>
+
+    <!-- === CRUST RING (yellow donut around neck) === -->
+    <g class="crust-ring">
+      <ellipse cx="250" cy="280" rx="85" ry="28" fill="url(#crustGrad)" stroke="#1a1a1a" stroke-width="3.5"/>
+      <!-- Crust center line / mouth smile -->
+      <path d="M180 280 Q215 290 250 286 Q285 290 320 280"
+            fill="none" stroke="#C49A18" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Crust highlight -->
+      <ellipse cx="230" cy="270" rx="30" ry="6" fill="white" opacity="0.12"/>
+      <!-- Bottom crust edge for depth -->
+      <path d="M170 288 Q210 305 250 300 Q290 305 330 288"
+            fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+    </g>
+
+    <!-- === HEAD (pizza slice / triangle) === -->
+    <path d="M250 120 L185 260 Q185 270 195 270 L305 270 Q315 270 315 260 L250 120 Z"
+          fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="3.5" stroke-linejoin="round"/>
+
+    <!-- Pizza spots/toppings on face (subtle) -->
+    <circle cx="230" cy="230" r="4" fill="#F5E6C8" stroke="#E0D0B0" stroke-width="1" opacity="0.5"/>
+    <circle cx="265" cy="245" r="3" fill="#F5E6C8" stroke="#E0D0B0" stroke-width="1" opacity="0.4"/>
+    <circle cx="245" cy="250" r="3.5" fill="#F5E6C8" stroke="#E0D0B0" stroke-width="1" opacity="0.45"/>
+
+    <!-- === SUNGLASSES === -->
+    <g filter="url(#softShadow)">
+      <!-- Left lens -->
+      <ellipse cx="232" cy="210" rx="24" ry="20" fill="url(#lensGrad)" stroke="#1a1a1a" stroke-width="4.5"/>
+      <!-- Right lens -->
+      <ellipse cx="268" cy="210" rx="24" ry="20" fill="url(#lensGrad)" stroke="#1a1a1a" stroke-width="4.5"/>
+      <!-- Bridge -->
+      <path d="M256 208 Q250 202 244 208" fill="none" stroke="#1a1a1a" stroke-width="4" stroke-linecap="round"/>
+      <!-- Left temple -->
+      <path d="M208 206 Q195 202 185 206" fill="none" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/>
+      <!-- Right temple -->
+      <path d="M292 206 Q305 202 315 206" fill="none" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/>
+
+      <!-- Reflection lines in left lens -->
+      <line class="reflection-line" x1="220" y1="204" x2="240" y2="204" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+      <line class="reflection-line-2" x1="218" y1="210" x2="242" y2="210" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+      <line class="reflection-line-3" x1="222" y1="216" x2="238" y2="216" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+
+      <!-- Reflection lines in right lens -->
+      <line class="reflection-line" x1="256" y1="204" x2="276" y2="204" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+      <line class="reflection-line-2" x1="254" y1="210" x2="278" y2="210" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+      <line class="reflection-line-3" x1="258" y1="216" x2="274" y2="216" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+    </g>
+
+    <!-- Glasses glints -->
+    <circle class="glint" cx="222" cy="200" r="5" fill="white" opacity="0"/>
+    <circle class="glint-2" cx="272" cy="202" r="4" fill="white" opacity="0"/>
+
+    <!-- === CROWN / CRUST TOP (yellow tuft) === -->
+    <g class="crown">
+      <!-- Main crown shape -->
+      <path d="M240 130 Q238 115 242 105 Q246 95 250 88 Q254 95 258 105 Q262 115 260 130"
+            fill="url(#crownGrad)" stroke="#1a1a1a" stroke-width="3" stroke-linejoin="round"/>
+      <!-- Left prong -->
+      <path d="M242 118 Q235 108 232 100 Q236 95 240 102 L242 112"
+            fill="url(#crownGrad)" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/>
+      <!-- Right prong -->
+      <path d="M258 118 Q265 108 268 100 Q264 95 260 102 L258 112"
+            fill="url(#crownGrad)" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/>
+    </g>
+
+    <!-- Eyebrow hints above glasses (cool/confident) -->
+    <path d="M215 192 Q232 186 248 192" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M252 192 Q268 186 285 192" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+
+  </g>
+</svg>
+</div>
+
+<script>
+// No mouse interactivity needed for sunglasses character (eyes hidden)
+// But we can add a subtle tilt response
+const scene = document.querySelector('.scene');
+const character = document.querySelector('.character-group');
+
+scene.addEventListener('mousemove', (e) => {
+  const rect = scene.getBoundingClientRect();
+  const dx = (e.clientX - (rect.left + rect.width / 2)) / rect.width;
+  const tilt = dx * 2;
+  character.style.animation = 'none';
+  character.style.transform = `rotate(${tilt}deg) translateY(-2px)`;
+  character.style.transformOrigin = '250px 650px';
+});
+
+scene.addEventListener('mouseleave', () => {
+  character.style.animation = '';
+  character.style.transform = '';
+});
+</script>
+</body>
+</html>

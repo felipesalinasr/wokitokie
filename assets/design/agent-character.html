@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Character</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #B5367A;
+    overflow: hidden;
+  }
+  .scene {
+    width: 500px;
+    height: 700px;
+    position: relative;
+  }
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Idle breathing bob */
+  .character-group {
+    animation: breathe 3s ease-in-out infinite;
+    transform-origin: 250px 600px;
+  }
+  @keyframes breathe {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  /* Blink animation */
+  .eyelid {
+    animation: blink 4s ease-in-out infinite;
+  }
+  .eyelid.right {
+    animation-delay: 0.05s;
+  }
+  @keyframes blink {
+    0%, 42%, 46%, 100% { transform: scaleY(0); }
+    44% { transform: scaleY(1); }
+  }
+
+  /* Gentle hair sway */
+  .hair {
+    animation: hairSway 5s ease-in-out infinite;
+    transform-origin: 250px 200px;
+  }
+  @keyframes hairSway {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(0.8deg); }
+    75% { transform: rotate(-0.8deg); }
+  }
+
+  /* Arms subtle shift */
+  .arms {
+    animation: armsShift 3s ease-in-out infinite;
+    transform-origin: 250px 380px;
+  }
+  @keyframes armsShift {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.01, 0.99); }
+  }
+
+  /* Glasses glint */
+  .glint {
+    animation: glint 6s ease-in-out infinite;
+  }
+  .glint-2 {
+    animation: glint 6s ease-in-out infinite;
+    animation-delay: 3s;
+  }
+  @keyframes glint {
+    0%, 85%, 100% { opacity: 0; }
+    90% { opacity: 0.7; }
+  }
+
+  /* Mustache bounce */
+  .mustache {
+    animation: mustacheBounce 3s ease-in-out infinite;
+    transform-origin: 250px 290px;
+  }
+  @keyframes mustacheBounce {
+    0%, 100% { transform: translateY(0) scaleY(1); }
+    50% { transform: translateY(1px) scaleY(1.015); }
+  }
+
+  /* Shadow pulse */
+  .shadow {
+    animation: shadowPulse 3s ease-in-out infinite;
+    transform-origin: 250px 640px;
+  }
+  @keyframes shadowPulse {
+    0%, 100% { transform: scaleX(1); opacity: 0.15; }
+    50% { transform: scaleX(1.05); opacity: 0.1; }
+  }
+
+  /* Eye pupils - idle look around */
+  .pupil-left {
+    animation: lookAround 7s ease-in-out infinite;
+  }
+  .pupil-right {
+    animation: lookAround 7s ease-in-out infinite;
+    animation-delay: 0.02s;
+  }
+  @keyframes lookAround {
+    0%, 30%, 100% { transform: translate(0, 0); }
+    35%, 55% { transform: translate(3px, -1px); }
+    60%, 80% { transform: translate(-2px, 1px); }
+    85%, 95% { transform: translate(1px, -2px); }
+  }
+
+  /* Bowtie spin on hover */
+  .bowtie {
+    transition: transform 0.4s ease;
+    transform-origin: 250px 328px;
+  }
+  .bowtie:hover {
+    transform: rotate(15deg);
+  }
+
+  /* Glasses push animation */
+  .glasses-push {
+    animation: glassesPush 8s ease-in-out infinite;
+    transform-origin: 250px 228px;
+  }
+  @keyframes glassesPush {
+    0%, 88%, 100% { transform: translateY(0); }
+    90% { transform: translateY(3px); }
+    93% { transform: translateY(-1px); }
+    95% { transform: translateY(0); }
+  }
+
+  /* Pocket protector pen wiggle */
+  .pen-wiggle {
+    animation: penWiggle 5s ease-in-out infinite;
+    transform-origin: 270px 430px;
+  }
+  @keyframes penWiggle {
+    0%, 90%, 100% { transform: rotate(0deg); }
+    93% { transform: rotate(3deg); }
+    96% { transform: rotate(-2deg); }
+  }
+
+  /* Floating code symbols */
+  .code-symbol {
+    animation: floatCode 4s ease-in-out infinite;
+    opacity: 0;
+  }
+  .code-symbol:nth-child(1) { animation-delay: 0s; }
+  .code-symbol:nth-child(2) { animation-delay: 1.3s; }
+  .code-symbol:nth-child(3) { animation-delay: 2.6s; }
+  @keyframes floatCode {
+    0% { opacity: 0; transform: translateY(0) scale(0.8); }
+    15% { opacity: 0.5; }
+    50% { opacity: 0.3; transform: translateY(-25px) scale(1); }
+    100% { opacity: 0; transform: translateY(-50px) scale(0.6); }
+  }
+</style>
+</head>
+<body>
+
+<div class="scene">
+<svg viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F0F0F0"/>
+    </linearGradient>
+    <linearGradient id="hairGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5DBB63"/>
+      <stop offset="50%" stop-color="#4EA855"/>
+      <stop offset="100%" stop-color="#3D9446"/>
+    </linearGradient>
+    <linearGradient id="mustacheGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5DBB63"/>
+      <stop offset="100%" stop-color="#4DA854"/>
+    </linearGradient>
+    <linearGradient id="lensGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F8FBFF"/>
+      <stop offset="100%" stop-color="#E8EEF8"/>
+    </linearGradient>
+    <linearGradient id="bowtieGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#E83E5A"/>
+      <stop offset="100%" stop-color="#C4283F"/>
+    </linearGradient>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#1a1a1a" flood-opacity="0.15"/>
+    </filter>
+    <!-- Magnification effect for lenses -->
+    <clipPath id="leftLensClip"><circle cx="222" cy="228" r="30"/></clipPath>
+    <clipPath id="rightLensClip"><circle cx="278" cy="228" r="30"/></clipPath>
+  </defs>
+
+  <!-- Floor shadow -->
+  <ellipse class="shadow" cx="250" cy="645" rx="80" ry="8" fill="#2a0a1a" opacity="0.15"/>
+
+  <!-- Floating code symbols -->
+  <g class="code-symbol">
+    <text x="350" y="180" fill="#FFD700" font-family="monospace" font-size="16" font-weight="bold" opacity="0.6">&lt;/&gt;</text>
+  </g>
+  <g class="code-symbol">
+    <text x="130" y="160" fill="#7DF9FF" font-family="monospace" font-size="14" font-weight="bold" opacity="0.6">{ }</text>
+  </g>
+  <g class="code-symbol">
+    <text x="370" y="130" fill="#FF6EC7" font-family="monospace" font-size="13" font-weight="bold" opacity="0.6">0x1F</text>
+  </g>
+
+  <g class="character-group">
+
+    <!-- === BODY / STEM === -->
+    <!-- Legs / base split -->
+    <path d="M220 530 L210 640 Q210 650 220 650 L230 650 Q235 650 235 640 L240 545 Z"
+          fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="3.5" stroke-linejoin="round"/>
+    <path d="M280 530 L290 640 Q290 650 280 650 L270 650 Q265 650 265 640 L260 545 Z"
+          fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="3.5" stroke-linejoin="round"/>
+
+    <!-- Main body/torso -->
+    <path d="M215 340 Q215 530 220 540 L280 540 Q285 530 285 340 Z"
+          fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="3.5" stroke-linejoin="round"/>
+
+    <!-- === POCKET PROTECTOR === -->
+    <g class="pen-wiggle">
+      <!-- Pocket -->
+      <rect x="256" y="420" width="30" height="38" rx="3" fill="#E8E8E8" stroke="#1a1a1a" stroke-width="2"/>
+      <line x1="256" y1="420" x2="286" y2="420" stroke="#1a1a1a" stroke-width="2.5"/>
+      <!-- Pens -->
+      <rect x="262" y="408" width="4" height="28" rx="1.5" fill="#2266CC" stroke="#1a1a1a" stroke-width="1"/>
+      <circle cx="264" cy="408" r="2.5" fill="#2266CC" stroke="#1a1a1a" stroke-width="1"/>
+      <rect x="269" y="412" width="4" height="24" rx="1.5" fill="#CC2233" stroke="#1a1a1a" stroke-width="1"/>
+      <circle cx="271" cy="412" r="2.5" fill="#CC2233" stroke="#1a1a1a" stroke-width="1"/>
+      <rect x="276" y="410" width="3.5" height="26" rx="1.5" fill="#22AA44" stroke="#1a1a1a" stroke-width="1"/>
+      <circle cx="277.75" cy="410" r="2.2" fill="#22AA44" stroke="#1a1a1a" stroke-width="1"/>
+    </g>
+
+    <!-- Chest / collar area -->
+    <path d="M215 340 Q215 320 250 315 Q285 320 285 340 Z"
+          fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="3" stroke-linejoin="round"/>
+
+    <!-- === BOWTIE (replaces V-collar) === -->
+    <g class="bowtie">
+      <!-- Left wing -->
+      <path d="M224 320 L248 328 L224 336 Q218 328 224 320 Z"
+            fill="url(#bowtieGrad)" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/>
+      <!-- Right wing -->
+      <path d="M276 320 L252 328 L276 336 Q282 328 276 320 Z"
+            fill="url(#bowtieGrad)" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/>
+      <!-- Center knot -->
+      <circle cx="250" cy="328" r="5" fill="#D03050" stroke="#1a1a1a" stroke-width="2"/>
+      <!-- Polka dots on bowtie -->
+      <circle cx="234" cy="326" r="2" fill="#FF8090" opacity="0.5"/>
+      <circle cx="238" cy="332" r="1.5" fill="#FF8090" opacity="0.4"/>
+      <circle cx="266" cy="326" r="2" fill="#FF8090" opacity="0.5"/>
+      <circle cx="262" cy="332" r="1.5" fill="#FF8090" opacity="0.4"/>
+    </g>
+
+    <!-- === ARMS === -->
+    <g class="arms">
+      <!-- Left arm -->
+      <path d="M215 350 Q185 355 175 370 Q165 385 175 400 Q185 415 210 400 Q225 390 240 380"
+            fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Left hand fingers -->
+      <path d="M268 365 Q275 355 280 360 Q282 365 275 372"
+            fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M275 358 Q282 348 288 354 Q290 360 282 366"
+            fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M280 355 Q287 346 293 352 Q294 358 288 362"
+            fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+
+      <!-- Right arm -->
+      <path d="M285 350 Q315 355 325 370 Q335 385 325 400 Q315 415 290 400 Q275 390 260 380"
+            fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Right hand tucked under -->
+      <path d="M218 385 Q210 378 215 370 Q220 365 228 372"
+            fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+
+    <!-- === HEAD === -->
+    <!-- Face base (white area) -->
+    <ellipse cx="250" cy="240" rx="65" ry="55" fill="url(#bodyGrad)" stroke="#1a1a1a" stroke-width="3.5"/>
+
+    <!-- Freckles -->
+    <circle cx="200" cy="250" r="2.5" fill="#E8C8A0" opacity="0.6"/>
+    <circle cx="208" cy="256" r="2" fill="#E8C8A0" opacity="0.5"/>
+    <circle cx="204" cy="243" r="1.8" fill="#E8C8A0" opacity="0.5"/>
+    <circle cx="296" cy="248" r="2.5" fill="#E8C8A0" opacity="0.6"/>
+    <circle cx="290" cy="255" r="2" fill="#E8C8A0" opacity="0.5"/>
+    <circle cx="300" cy="242" r="1.8" fill="#E8C8A0" opacity="0.5"/>
+
+    <!-- === MUSTACHE === -->
+    <g class="mustache">
+      <path d="M160 268 Q165 240 200 248 Q230 255 250 270 Q270 255 300 248 Q335 240 340 268
+              Q340 310 300 315 Q270 318 250 330 Q230 318 200 315 Q160 310 160 268 Z"
+            fill="url(#mustacheGrad)" stroke="#1a1a1a" stroke-width="3.5" stroke-linejoin="round"/>
+      <!-- Mustache center line (smile) -->
+      <path d="M200 285 Q225 295 250 290 Q275 295 300 285"
+            fill="none" stroke="#2d7a32" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+    </g>
+
+    <!-- === GLASSES (bigger, thicker, nerdier) === -->
+    <g class="glasses-push" filter="url(#softShadow)">
+      <!-- Left lens - bigger -->
+      <circle cx="222" cy="228" r="32" fill="url(#lensGrad)" stroke="#1a1a1a" stroke-width="5.5"/>
+      <!-- Right lens - bigger -->
+      <circle cx="278" cy="228" r="32" fill="url(#lensGrad)" stroke="#1a1a1a" stroke-width="5.5"/>
+      <!-- Bridge - thicker -->
+      <path d="M254 226 Q250 218 246 226" fill="none" stroke="#1a1a1a" stroke-width="5.5" stroke-linecap="round"/>
+      <!-- Tape on bridge! -->
+      <rect x="244" y="217" width="12" height="7" rx="1" fill="#F5E6C8" stroke="#D4C4A0" stroke-width="0.8" opacity="0.85"
+            transform="rotate(-5, 250, 220)"/>
+      <!-- Left temple - thick -->
+      <path d="M190 224 Q176 220 168 224" fill="none" stroke="#1a1a1a" stroke-width="5" stroke-linecap="round"/>
+      <!-- Right temple - thick -->
+      <path d="M310 224 Q324 220 332 224" fill="none" stroke="#1a1a1a" stroke-width="5" stroke-linecap="round"/>
+    </g>
+
+    <!-- === EYES (magnified behind thick lenses) === -->
+    <!-- Left eye - bigger, magnified look -->
+    <g>
+      <ellipse cx="222" cy="232" rx="16" ry="17" fill="white"/>
+      <g class="pupil-left">
+        <circle cx="222" cy="234" r="8.5" fill="#1a1a1a"/>
+        <circle cx="218" cy="230" r="3" fill="white" opacity="0.85"/>
+        <circle cx="225" cy="228" r="1.5" fill="white" opacity="0.5"/>
+      </g>
+      <!-- Left eyelid (for blink) -->
+      <ellipse class="eyelid" cx="222" cy="228" rx="18" ry="18" fill="url(#lensGrad)"
+               style="transform-origin: 222px 228px;"/>
+    </g>
+
+    <!-- Right eye - bigger, magnified look -->
+    <g>
+      <ellipse cx="278" cy="232" rx="16" ry="17" fill="white"/>
+      <g class="pupil-right">
+        <circle cx="278" cy="234" r="8.5" fill="#1a1a1a"/>
+        <circle cx="274" cy="230" r="3" fill="white" opacity="0.85"/>
+        <circle cx="281" cy="228" r="1.5" fill="white" opacity="0.5"/>
+      </g>
+      <!-- Right eyelid (for blink) -->
+      <ellipse class="eyelid right" cx="278" cy="228" rx="18" ry="18" fill="url(#lensGrad)"
+               style="transform-origin: 278px 228px;"/>
+    </g>
+
+    <!-- Eyebrow hints - raised higher, more worried/curious -->
+    <path d="M202 202 Q222 190 242 202" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M258 202 Q278 190 298 202" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- Glasses glints - both lenses -->
+    <circle class="glint" cx="210" cy="216" r="6" fill="white" opacity="0"/>
+    <circle class="glint-2" cx="268" cy="218" r="4" fill="white" opacity="0"/>
+
+    <!-- === BUCK TEETH === -->
+    <g>
+      <rect x="243" y="262" width="7" height="10" rx="2" fill="white" stroke="#1a1a1a" stroke-width="1.8"/>
+      <rect x="251" y="262" width="7" height="10" rx="2" fill="white" stroke="#1a1a1a" stroke-width="1.8"/>
+      <!-- Braces wire -->
+      <line x1="243" y1="268" x2="258" y2="268" stroke="#AAAAAA" stroke-width="1"/>
+      <!-- Braces brackets -->
+      <rect x="245" y="266.5" width="3" height="3" rx="0.5" fill="#C0C0C0" stroke="#999" stroke-width="0.5"/>
+      <rect x="253" y="266.5" width="3" height="3" rx="0.5" fill="#C0C0C0" stroke="#999" stroke-width="0.5"/>
+    </g>
+
+    <!-- === HAIR (Broccoli top) === -->
+    <g class="hair">
+      <!-- Main hair mass -->
+      <path d="M160 195 Q155 150 175 120 Q185 100 210 90 Q230 80 250 78
+              Q270 80 290 90 Q315 100 325 120 Q345 150 340 195
+              Q338 215 320 225 Q300 235 280 230
+              Q265 225 250 228 Q235 225 220 230
+              Q200 235 180 225 Q162 215 160 195 Z"
+            fill="url(#hairGrad)" stroke="#1a1a1a" stroke-width="3.5" stroke-linejoin="round"/>
+
+      <!-- Hair bumps / texture -->
+      <circle cx="195" cy="130" r="22" fill="#5DBB63" stroke="#1a1a1a" stroke-width="2.5"/>
+      <circle cx="230" cy="105" r="24" fill="#55B05A" stroke="#1a1a1a" stroke-width="2.5"/>
+      <circle cx="270" cy="105" r="24" fill="#5DBB63" stroke="#1a1a1a" stroke-width="2.5"/>
+      <circle cx="305" cy="130" r="22" fill="#52AC56" stroke="#1a1a1a" stroke-width="2.5"/>
+      <circle cx="250" cy="88" r="20" fill="#4EA855" stroke="#1a1a1a" stroke-width="2.5"/>
+      <circle cx="175" cy="160" r="18" fill="#55B05A" stroke="#1a1a1a" stroke-width="2.5"/>
+      <circle cx="325" cy="160" r="18" fill="#4EA855" stroke="#1a1a1a" stroke-width="2.5"/>
+      <circle cx="210" cy="95" r="16" fill="#4EA855" stroke="#1a1a1a" stroke-width="2"/>
+      <circle cx="290" cy="95" r="16" fill="#55B05A" stroke="#1a1a1a" stroke-width="2"/>
+
+      <!-- Hair highlight -->
+      <ellipse cx="235" cy="100" rx="12" ry="8" fill="white" opacity="0.08"/>
+    </g>
+
+  </g>
+</svg>
+</div>
+
+<script>
+// Interactive: eyes follow mouse
+const scene = document.querySelector('.scene');
+const pupils = document.querySelectorAll('.pupil-left, .pupil-right');
+
+scene.addEventListener('mousemove', (e) => {
+  const rect = scene.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height * 0.33;
+  const dx = (e.clientX - cx) / rect.width;
+  const dy = (e.clientY - cy) / rect.height;
+  const maxMove = 6;
+
+  pupils.forEach(p => {
+    p.style.animation = 'none';
+    p.style.transform = `translate(${dx * maxMove}px, ${dy * maxMove}px)`;
+  });
+});
+
+scene.addEventListener('mouseleave', () => {
+  pupils.forEach(p => {
+    p.style.animation = '';
+    p.style.transform = '';
+  });
+});
+</script>
+</body>
+</html>

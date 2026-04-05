@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=800">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 800px;
+    height: 418px;
+    background: #ffffff;
+    font-family: ui-sans-serif, -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(78,205,196,0.06), transparent),
+      radial-gradient(ellipse 60% 40% at 80% 60%, rgba(78,205,196,0.03), transparent);
+    pointer-events: none;
+  }
+
+  h1 {
+    font-size: 64px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: #0d0d0d;
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .terminal-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    background: #1a1a1a;
+    color: #4afa4a;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    font-weight: 700;
+    padding: 4px 16px;
+    border-radius: 8px;
+    font-size: 0.88em;
+    vertical-align: baseline;
+    letter-spacing: -0.02em;
+  }
+
+  .terminal-inline .dollar {
+    opacity: 0.5;
+    margin-right: 4px;
+  }
+
+  .sub {
+    font-size: 16px;
+    color: #676767;
+    text-align: center;
+    max-width: 520px;
+    line-height: 1.5;
+    margin-bottom: 28px;
+    position: relative;
+  }
+
+  .install {
+    display: inline-flex;
+    align-items: center;
+    background: #1a1a1a;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .install-prompt {
+    padding: 10px 0 10px 14px;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    font-size: 13px;
+    color: rgba(255,255,255,0.35);
+  }
+
+  .install-cmd {
+    padding: 10px 14px 10px 6px;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    font-size: 13px;
+    color: #4afa4a;
+  }
+
+  .logo {
+    position: absolute;
+    top: 24px;
+    left: 28px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #0d0d0d;
+    letter-spacing: -0.02em;
+  }
+
+  .logo-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .url {
+    position: absolute;
+    bottom: 24px;
+    right: 28px;
+    font-size: 13px;
+    color: #9b9b9b;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+
+<div class="logo">
+  <svg class="logo-icon" viewBox="0 0 28 28" fill="none">
+    <rect width="28" height="28" rx="7" fill="#0d0d0d"/>
+    <rect x="11.5" y="6" width="5" height="10" rx="2.5" fill="#4afa4a"/>
+    <path d="M9 14v1a5 5 0 0010 0v-1" stroke="#4afa4a" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="14" y1="20" x2="14" y2="23" stroke="#4afa4a" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+  Woki Tokie
+</div>
+
+<h1>Your <span class="terminal-inline"><span class="dollar">$</span>terminal</span><br>talks back.</h1>
+
+<p class="sub">Voice-to-voice system for Claude Code. Hold Space to dictate, release to auto-submit, hear Claude's response spoken back.</p>
+
+<div class="install">
+  <span class="install-prompt">$</span>
+  <span class="install-cmd">npx wokitokie install</span>
+</div>
+
+<span class="url">wokitokie.vercel.app</span>
+
+</body>
+</html>
