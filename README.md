@@ -2,39 +2,49 @@
 
 Voice-to-voice mode for Claude Code. Speak to Claude, hear it think, get spoken responses.
 
-## Install
+## Quick Start
 
 ```bash
-claude plugin add github:felipesalinasr/wokitokie
+npx wokitokie install
+export ELEVENLABS_API_KEY="your-key"  # add to ~/.zshrc to persist
+npx wokitokie generate
 ```
 
-Or from npm:
+Then in Claude Code:
+
+```
+/voice-on
+```
+
+That's it. You're talking to Claude.
+
+## Install Options
 
 ```bash
-claude plugin add wokitokie
+npx wokitokie install                          # via npm (recommended)
+claude plugin add wokitokie                     # direct plugin install
+claude plugin add github:felipesalinasr/wokitokie  # from GitHub
 ```
 
-## Setup
-
-1. Set your ElevenLabs API key:
+## CLI Commands
 
 ```bash
-echo 'export ELEVENLABS_API_KEY="your-key"' >> ~/.zshrc
-source ~/.zshrc
+npx wokitokie install     # install the Claude Code plugin
+npx wokitokie on          # enable voice mode
+npx wokitokie off         # disable voice mode
+npx wokitokie generate    # create thinking sound clips
+npx wokitokie status      # check if voice mode is active
 ```
 
-2. Generate thinking sound clips:
+## Slash Commands (inside Claude Code)
 
 ```
-/voice-generate
+/voice-on          # enable voice mode for this session
+/voice-off         # disable voice mode
+/voice-generate    # generate thinking sound clips
 ```
 
-## Usage
-
-```
-/voice-on     # start voice mode
-/voice-off    # stop voice mode
-```
+## How It Works
 
 When voice mode is on:
 - Claude speaks responses aloud via ElevenLabs TTS
